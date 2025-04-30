@@ -27,26 +27,40 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 201 100% 40%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 262 83% 58%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --background: 0 0% 10%;
+    --foreground: 0 0% 95%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 0 0% 95%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 0 0% 16%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 0 0% 16%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 40%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 0 0% 70%;
+    --chart-1: 220 70% 60%;
+    --chart-2: 160 60% 50%;
+    --chart-3: 30 80% 60%;
+    --chart-4: 280 65% 65%;
+    --chart-5: 340 75% 60%;
+    --sidebar-background: 240 6% 12%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 224.3 76.3% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 4% 18%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 240 4% 18%;
+    --sidebar-ring: 217.2 91.2% 65%;
   }
+  
 }
 
 @layer base {
@@ -75,4 +89,50 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Estilos para arrastar e soltar */
+.task-dragging {
+  opacity: 0.5;
+  cursor: grabbing !important;
+}
+
+.column-drop-target {
+  border: 2px dashed hsl(var(--primary)) !important;
+  background-color: hsl(var(--primary) / 0.1);
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Estilos para diferentes esquemas de cores */
+[data-color-scheme="Verde"] {
+  --primary: 158 84% 31%;
+  --secondary: 191 92% 36%;
+}
+
+[data-color-scheme="Vermelho"] {
+  --primary: 0 74% 50%;
+  --secondary: 25 95% 53%;
+}
+
+[data-color-scheme="Roxo"] {
+  --primary: 262 83% 58%;
+  --secondary: 328 73% 52%;
+}
+
+[data-color-scheme="Azul"] {
+  --primary: 217 91% 60%;
+  --secondary: 191 92% 36%;
 }
