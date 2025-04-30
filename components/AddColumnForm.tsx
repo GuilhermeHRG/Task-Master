@@ -1,14 +1,21 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 
-export default function AddColumnForm({ onAdd, onCancel }) {
+interface AddColumnFormProps {
+  onAdd: (title: string) => void
+  onCancel: () => void
+}
+
+export default function AddColumnForm({ onAdd, onCancel }: AddColumnFormProps) {
   const [title, setTitle] = useState("")
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (title.trim()) {
       onAdd(title)

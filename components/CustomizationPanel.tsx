@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { useKanban } from "@/context/KanbanContext"
+import { useState, useEffect } from "react"
+import { useKanban, type ThemeSettings } from "@/app/contexts/KanbanContext"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet"
@@ -9,10 +9,23 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Slider } from "@/components/ui/slider"
+import { useTheme } from "next-themes";
 
-export default function CustomizationPanel({ onClose }) {
+
+interface CustomizationPanelProps {
+  onClose: () => void
+}
+
+export default function CustomizationPanel({ onClose }: CustomizationPanelProps) {
   const { theme, updateTheme } = useKanban()
-  const [localTheme, setLocalTheme] = useState(theme)
+  const { theme: visualTheme, setTheme } = useTheme();
+
+  const [localTheme, setLocalTheme] = useState<ThemeSettings>(theme)
+
+  // Atualizar o tema local quando o tema global mudar
+  useEffect(() => {
+    setLocalTheme(theme)
+  }, [theme])
 
   const handleSave = () => {
     updateTheme(localTheme)
@@ -66,13 +79,35 @@ export default function CustomizationPanel({ onClose }) {
                     </div>
                   ))}
                 </RadioGroup>
+
+                <div className="mt-6">
+  <Label className="mb-2 block">Tema</Label>
+  <Button
+    variant="outline"
+    onClick={() => {
+      const next = visualTheme === "dark" ? "light" : "dark";
+      setTheme(next);
+      setLocalTheme((prev) => ({
+        ...prev,
+        colorScheme: next === "dark" ? "dark" : "Padrão"
+      }));
+    }}
+  >
+    Alternar para tema {visualTheme === "dark" ? "claro" : "escuro"}
+  </Button>
+</div>
+
+
+
               </div>
 
               <div>
                 <h3 className="text-sm font-medium mb-3">Estilo de cartão</h3>
                 <RadioGroup
                   value={localTheme.cardStyle}
-                  onValueChange={(value) => setLocalTheme({ ...localTheme, cardStyle: value })}
+                  onValueChange={(value: "default" | "flat" | "bordered") =>
+                    setLocalTheme({ ...localTheme, cardStyle: value })
+                  }
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="default" id="default-card" />
@@ -95,7 +130,7 @@ export default function CustomizationPanel({ onClose }) {
             <div>
               <h3 className="text-sm font-medium mb-2">Espaçamento entre colunas</h3>
               <Slider
-                defaultValue={[localTheme.columnGap || 16]}
+                value={[localTheme.columnGap || 16]}
                 max={32}
                 step={4}
                 onValueChange={(value) => setLocalTheme({ ...localTheme, columnGap: value[0] })}
@@ -109,7 +144,7 @@ export default function CustomizationPanel({ onClose }) {
             <div>
               <h3 className="text-sm font-medium mb-2">Arredondamento dos cartões</h3>
               <Slider
-                defaultValue={[localTheme.borderRadius || 8]}
+                value={[localTheme.borderRadius || 8]}
                 max={16}
                 step={2}
                 onValueChange={(value) => setLocalTheme({ ...localTheme, borderRadius: value[0] })}
@@ -124,7 +159,9 @@ export default function CustomizationPanel({ onClose }) {
               <h3 className="text-sm font-medium mb-3">Largura das colunas</h3>
               <RadioGroup
                 value={localTheme.columnWidth || "medium"}
-                onValueChange={(value) => setLocalTheme({ ...localTheme, columnWidth: value })}
+                onValueChange={(value: "narrow" | "medium" | "wide") =>
+                  setLocalTheme({ ...localTheme, columnWidth: value })
+                }
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="narrow" id="narrow-column" />

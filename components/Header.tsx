@@ -1,17 +1,26 @@
 "use client"
 
-import { useState } from "react"
-import { useKanban } from "@/context/KanbanContext"
+import { useState, useEffect } from "react"
+import { useKanban } from "@/app/contexts/KanbanContext"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Palette, Save, Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
+import { Palette, Save, StickyNote } from "lucide-react"
+import { UserNav } from "@/components/user-nav"
 
-export default function Header({ onCustomize, showCustomization }) {
+interface HeaderProps {
+  onCustomize: () => void
+  showCustomization: boolean
+  onAddNote: () => void // 👈 novo prop
+}
+
+export default function Header({ onCustomize, showCustomization, onAddNote }: HeaderProps) {
   const { boardName, updateBoardName } = useKanban()
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [title, setTitle] = useState(boardName)
-  const { theme, setTheme } = useTheme()
+
+  useEffect(() => {
+    setTitle(boardName)
+  }, [boardName])
 
   const handleTitleSave = () => {
     if (title.trim()) {
@@ -20,10 +29,6 @@ export default function Header({ onCustomize, showCustomization }) {
       setTitle(boardName)
     }
     setIsEditingTitle(false)
-  }
-
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark")
   }
 
   return (
@@ -59,18 +64,17 @@ export default function Header({ onCustomize, showCustomization }) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleTheme}
-            title={theme === "dark" ? "Modo claro" : "Modo escuro"}
-          >
-            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          <Button variant="outline" onClick={onAddNote} className="gap-2">
+            <StickyNote className="h-4 w-4" />
+            Nova Nota
           </Button>
+
           <Button variant={showCustomization ? "default" : "outline"} onClick={onCustomize} className="gap-2">
             <Palette className="h-4 w-4" />
             Personalizar
           </Button>
+
+          <UserNav />
         </div>
       </div>
     </header>
