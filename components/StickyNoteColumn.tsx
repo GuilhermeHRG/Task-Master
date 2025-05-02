@@ -1,5 +1,5 @@
 import { Trash2, Pencil, Minus, Plus } from "lucide-react"
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState } from "react"
 import { motion, useDragControls } from "framer-motion"
 
 interface Note {
@@ -20,14 +20,6 @@ export function StickyNoteColumn({ notes, onDelete, onEdit }: Props) {
   const [minimized, setMinimized] = useState(false)
   const dragControls = useDragControls()
   const containerRef = useRef<HTMLDivElement>(null)
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.matchMedia("(max-width: 768px)").matches)
-    check()
-    window.addEventListener("resize", check)
-    return () => window.removeEventListener("resize", check)
-  }, [])
 
   const handleEdit = (id: string, content: string) => {
     setEditingId(id)
@@ -43,22 +35,16 @@ export function StickyNoteColumn({ notes, onDelete, onEdit }: Props) {
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="fixed inset-0 z-40 pointer-events-none select-none"
-      onTouchMove={(e) => e.stopPropagation()}
-    >
+    <div ref={containerRef} className="fixed inset-0 z-40 pointer-events-none select-none">
       <motion.div
-        drag
+        drag="x"
         dragListener={false}
         dragControls={dragControls}
         dragConstraints={containerRef}
         dragElastic={0.1}
-        dragSnapToOrigin
         className={`
-          fixed z-50 bg-background/80 border border-border backdrop-blur-md 
+          fixed bottom-4 right-4 z-50 bg-background/90 border border-border backdrop-blur-md
           rounded-2xl shadow-xl w-[95vw] max-w-sm pointer-events-auto
-          md:top-20 md:right-4 top-auto bottom-0 right-0 m-2
         `}
       >
         <div
@@ -75,7 +61,7 @@ export function StickyNoteColumn({ notes, onDelete, onEdit }: Props) {
         </div>
 
         {!minimized && (
-          <div className="p-4 space-y-4 max-h-[70vh] overflow-y-auto">
+          <div className="p-4 space-y-4 max-h-[40vh] overflow-y-auto">
             {notes.map((note) => (
               <div
                 key={note.id}

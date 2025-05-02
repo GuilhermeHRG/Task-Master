@@ -58,7 +58,7 @@ export default function Header({ onCustomize, showCustomization, onAddNote }: He
             </div>
           ) : (
             <h1
-              className="text-xl font-bold cursor-pointer text-foreground"
+              className="text-xl font-bold cursor-pointer text-start uppercase text-foreground"
               onClick={() => setIsEditingTitle(true)}
             >
               {boardName}
@@ -66,7 +66,7 @@ export default function Header({ onCustomize, showCustomization, onAddNote }: He
           )}
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex justify-between items-center gap-2">
           <Button variant="outline" onClick={onAddNote} className="gap-2 w-full sm:w-auto">
             <StickyNote className="h-4 w-4" />
             Nova Nota
@@ -81,7 +81,7 @@ export default function Header({ onCustomize, showCustomization, onAddNote }: He
             Personalizar
           </Button>
 
-          <div className="w-full sm:w-auto">
+          <div className="w-full sm:w-auto max-sm:ml-8">
             <UserNav />
           </div>
         </div>
