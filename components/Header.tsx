@@ -10,7 +10,7 @@ import { UserNav } from "@/components/user-nav"
 interface HeaderProps {
   onCustomize: () => void
   showCustomization: boolean
-  onAddNote: () => void // 👈 novo prop
+  onAddNote: () => void
 }
 
 export default function Header({ onCustomize, showCustomization, onAddNote }: HeaderProps) {
@@ -33,10 +33,10 @@ export default function Header({ onCustomize, showCustomization, onAddNote }: He
 
   return (
     <header className="border-b bg-background">
-      <div className="container flex h-16 items-center justify-between px-4">
-        <div className="flex items-center gap-4">
+      <div className="container flex flex-col sm:flex-row sm:h-16 gap-2 sm:gap-4 sm:items-center justify-between px-4 py-2">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
           {isEditingTitle ? (
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <Input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -49,7 +49,7 @@ export default function Header({ onCustomize, showCustomization, onAddNote }: He
                     setIsEditingTitle(false)
                   }
                 }}
-                className="w-[300px]"
+                className="w-full sm:w-[300px]"
               />
               <Button onClick={handleTitleSave} size="sm">
                 <Save className="h-4 w-4 mr-2" />
@@ -57,24 +57,33 @@ export default function Header({ onCustomize, showCustomization, onAddNote }: He
               </Button>
             </div>
           ) : (
-            <h1 className="text-xl font-bold cursor-pointer" onClick={() => setIsEditingTitle(true)}>
+            <h1
+              className="text-xl font-bold cursor-pointer text-foreground"
+              onClick={() => setIsEditingTitle(true)}
+            >
               {boardName}
             </h1>
           )}
         </div>
 
-        <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={onAddNote} className="gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" onClick={onAddNote} className="gap-2 w-full sm:w-auto">
             <StickyNote className="h-4 w-4" />
             Nova Nota
           </Button>
 
-          <Button variant={showCustomization ? "default" : "outline"} onClick={onCustomize} className="gap-2">
+          <Button
+            variant={showCustomization ? "default" : "outline"}
+            onClick={onCustomize}
+            className="gap-2 w-full sm:w-auto"
+          >
             <Palette className="h-4 w-4" />
             Personalizar
           </Button>
 
-          <UserNav />
+          <div className="w-full sm:w-auto">
+            <UserNav />
+          </div>
         </div>
       </div>
     </header>
