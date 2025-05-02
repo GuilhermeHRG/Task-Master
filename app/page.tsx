@@ -67,7 +67,7 @@ export default function Home() {
         onAddNote={() => setShowModal(true)}
       />
 
-      <main className="flex-1 p-4 md:p-6 overflow-hidden">
+      <main className="flex-1 px-2 py-4 sm:px-4 md:px-6 overflow-hidden">
         <Board />
       </main>
 
