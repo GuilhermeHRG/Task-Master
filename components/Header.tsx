@@ -4,8 +4,9 @@ import { useState, useEffect } from "react"
 import { useKanban } from "@/app/contexts/KanbanContext"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Palette, Save, StickyNote } from "lucide-react"
+import { Palette, Save, StickyNote, Calendar } from "lucide-react"
 import { UserNav } from "@/components/user-nav"
+import { useSession } from "next-auth/react"
 
 interface HeaderProps {
   onCustomize: () => void
@@ -17,6 +18,7 @@ export default function Header({ onCustomize, showCustomization, onAddNote }: He
   const { boardName, updateBoardName } = useKanban()
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [title, setTitle] = useState(boardName)
+  const { data: session } = useSession()
 
   useEffect(() => {
     setTitle(boardName)
@@ -30,6 +32,29 @@ export default function Header({ onCustomize, showCustomization, onAddNote }: He
     }
     setIsEditingTitle(false)
   }
+
+  const email = session?.user?.email
+
+  const abrirNovoEvento = () => {
+    const titulo = "Digite aqui o título do evento"
+    const descricao = "Descrição do evento"
+    const local = "Local do evento"
+
+    const inicio = new Date()
+    const fim = new Date(inicio.getTime() + 60 * 60 * 1000)
+
+    const formatData = (d: Date) =>
+      d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z"
+
+    const url = `https://calendar.google.com/calendar/u/0/r/eventedit?text=${encodeURIComponent(
+      titulo
+    )}&dates=${formatData(inicio)}/${formatData(fim)}&details=${encodeURIComponent(
+      descricao
+    )}&location=${encodeURIComponent(local)}`
+
+    window.open(url, "_blank")
+  }
+
 
   return (
     <header className="border-b bg-background">
@@ -72,6 +97,16 @@ export default function Header({ onCustomize, showCustomization, onAddNote }: He
             Nova Nota
           </Button>
 
+          
+
+          <Button
+            variant="outline"
+            className="gap-2 w-full sm:w-auto"
+            onClick={abrirNovoEvento}
+          >
+            <Calendar className="h-4 w-4" />
+            Novo Evento
+          </Button>
           <Button
             variant={showCustomization ? "default" : "outline"}
             onClick={onCustomize}

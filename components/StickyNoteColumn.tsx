@@ -2,6 +2,8 @@ import { Trash2, Pencil, Minus, Plus } from "lucide-react"
 import { useRef, useState } from "react"
 import { motion, useDragControls } from "framer-motion"
 
+
+
 interface Note {
   id: string
   content: string
@@ -42,10 +44,8 @@ export function StickyNoteColumn({ notes, onDelete, onEdit }: Props) {
         dragControls={dragControls}
         dragConstraints={containerRef}
         dragElastic={0.1}
-        className={`
-          fixed bottom-4 right-4 z-50 bg-background/90 border border-border backdrop-blur-md
-          rounded-2xl shadow-xl w-[95vw] max-w-sm pointer-events-auto
-        `}
+        className="fixed z-50 bottom-4 right-4 bg-background/90 border border-border backdrop-blur-md 
+                   rounded-2xl shadow-xl w-[95vw] max-w-sm pointer-events-auto"
       >
         <div
           className="cursor-move bg-muted/70 px-4 py-3 flex justify-between items-center border-b border-border rounded-t-2xl"
@@ -62,46 +62,61 @@ export function StickyNoteColumn({ notes, onDelete, onEdit }: Props) {
 
         {!minimized && (
           <div className="p-4 space-y-4 max-h-[40vh] overflow-y-auto">
-            {notes.map((note) => (
-              <div
-                key={note.id}
-                style={{ backgroundColor: note.color }}
-                className="p-3 rounded-xl shadow-inner flex flex-col gap-2 text-sm text-foreground/90 transition-all"
-              >
-                {editingId === note.id ? (
-                  <>
-                    <textarea
-                      value={editingContent}
-                      onChange={(e) => setEditingContent(e.target.value)}
-                      className="w-full resize-none p-2 rounded-md border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                    />
-                    <button
-                      onClick={saveEdit}
-                      className="self-end bg-primary text-primary-foreground px-3 py-1 rounded-md text-xs hover:brightness-105 transition"
-                    >
-                      Salvar
-                    </button>
-                  </>
-                ) : (
-                  <p className="whitespace-pre-wrap break-words">{note.content}</p>
-                )}
+            {notes.map((note) => {
+  const getContrastTextColor = (bgColor: string) => {
+    // Remove "#" se presente
+    const hex = bgColor.replace("#", "")
+    const r = parseInt(hex.substring(0, 2), 16)
+    const g = parseInt(hex.substring(2, 4), 16)
+    const b = parseInt(hex.substring(4, 6), 16)
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+    return luminance > 0.6 ? "text-black" : "text-white"
+  }
 
-                <div className="flex justify-end gap-2">
-                  <button
-                    onClick={() => handleEdit(note.id, note.content)}
-                    className="text-muted-foreground hover:text-blue-500 transition"
-                  >
-                    <Pencil size={16} />
-                  </button>
-                  <button
-                    onClick={() => onDelete(note.id)}
-                    className="text-muted-foreground hover:text-red-500 transition"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              </div>
-            ))}
+  const textColor = getContrastTextColor(note.color)
+
+  return (
+    <div
+      key={note.id}
+      style={{ backgroundColor: note.color }}
+      className={`p-3 rounded-xl shadow-inner flex flex-col gap-2 text-sm transition-all ${textColor}`}
+    >
+      {editingId === note.id ? (
+        <>
+          <textarea
+            value={editingContent}
+            onChange={(e) => setEditingContent(e.target.value)}
+            className="w-full resize-none p-2 rounded-md border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring text-black"
+          />
+          <button
+            onClick={saveEdit}
+            className="self-end bg-primary text-primary-foreground px-3 py-1 rounded-md text-xs hover:brightness-105 transition"
+          >
+            Salvar
+          </button>
+        </>
+      ) : (
+        <p className="whitespace-pre-wrap break-words">{note.content}</p>
+      )}
+
+      <div className="flex justify-end gap-2">
+        <button
+          onClick={() => handleEdit(note.id, note.content)}
+          className="hover:text-blue-300 transition"
+        >
+          <Pencil size={16} />
+        </button>
+        <button
+          onClick={() => onDelete(note.id)}
+          className="hover:text-red-300 transition"
+        >
+          <Trash2 size={16} />
+        </button>
+      </div>
+    </div>
+  )
+})}
+
           </div>
         )}
       </motion.div>
